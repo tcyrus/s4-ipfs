@@ -8,9 +8,9 @@ do
         for bucketPath in /s4/* ; do
             (
                 if [ "$bucketPath" != "/s4/.minio.sys" ] && [ "$bucketPath" != "/s4/system" ] ; then
-                    
+
                     replace="/s4/"
-                    bucket="${bucketPath/$replace/''}"    
+                    bucket="${bucketPath/$replace/''}"
 
                     if (ipfs key list | grep $bucket >/dev/null) ; then
                         echo "* Publishing Bucket: $bucket"
@@ -18,14 +18,14 @@ do
                     else
                         echo "* Creating Key for Bucket: $bucket"
                         mkdir -p "/s4/system/$bucket"
-                        
-                        ipfs key gen --type=rsa --size=2048 $bucket > "/s4/system/$bucket/hash"
+
+                        ipfs key gen --type=ed25519 $bucket > "/s4/system/$bucket/hash"
 
                         hash=$(cat "/s4/system/$bucket/hash")
                         echo "HASH --->"
                         echo $hash
                         echo $hash > "/s4/system/$bucket/$hash"
-                    fi            
+                    fi
                 fi
             )
         done
